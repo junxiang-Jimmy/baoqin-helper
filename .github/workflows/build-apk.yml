@@ -18,13 +18,13 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: 安装 Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: 安装 Gradle 8.9
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
+
+      - name: 补齐 SDK 组件（runner 已预装 Android SDK）
+        run: sdkmanager --install "platforms;android-34" "build-tools;34.0.0" > /dev/null
 
       - name: 编译 APK
         run: gradle assembleDebug --no-daemon
