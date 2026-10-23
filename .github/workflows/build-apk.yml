@@ -23,8 +23,11 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: 补齐 SDK 组件（runner 已预装 Android SDK）
-        run: sdkmanager --install "platforms;android-34" "build-tools;34.0.0" > /dev/null
+      - name: 补齐 SDK 组件（失败不中断，Gradle 会兑底）
+        run: |
+          SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SDKM" --licenses > /dev/null 2>&1 || true
+          "$SDKM" --install "platforms;android-34" "build-tools;34.0.0" > /dev/null 2>&1 || true
 
       - name: 编译 APK
         run: gradle assembleDebug --no-daemon
